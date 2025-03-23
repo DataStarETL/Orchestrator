@@ -8,7 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Implementation for `v1` condition-status endpoints
 ### Changed
+- Structure of existing DB functions for conditions
+- Structure of existing rest service functions for conditions
 ### Deprecated
 ### Removed
 ### Fixed

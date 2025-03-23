@@ -7,6 +7,7 @@ import (
 	"github.com/DataStarETL/Orchestrator/internal/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
 )
 
 func (r *RestService) GetConditions(c *gin.Context) {
@@ -25,6 +26,12 @@ func (r *RestService) PostCondition(c *gin.Context) {
 	}
 	newCondition.Creator = "SYSTEM"
 	err := database.InsertConditionsSpecific(r.DB, &newCondition)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	newConditionStatus := models.ConditionStatus{ID: newCondition.ID, Status: false, LastChangedBy: "SYSTEM", LastChangedAt: time.Now()}
+	err = database.InsertConditionStatusSpecific(r.DB, &newConditionStatus)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -64,6 +71,11 @@ func (r *RestService) DeleteConditionSpecific(c *gin.Context) {
 		return
 	}
 	err = database.DeleteConditionsSpecific(r.DB, id)
+	if err != nil {
+		panic(err)
+	}
+
+	err = database.DeleteConditionStatusSpecific(r.DB, id)
 	if err != nil {
 		panic(err)
 	}

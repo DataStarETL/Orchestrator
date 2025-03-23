@@ -3,26 +3,8 @@ package database
 import (
 	"database/sql"
 	"fmt"
-	"github.com/DataStarETL/Orchestrator/internal/config"
 	"github.com/DataStarETL/Orchestrator/internal/models"
-
-	_ "github.com/lib/pq"
 )
-
-func CreateDBConnection(config *config.DatabaseConfig) (*sql.DB, error) {
-	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		config.Host, config.Port, config.User, config.Password, config.Dbname)
-	db, err := sql.Open("postgres", psqlInfo)
-	if err != nil {
-		return nil, err
-	}
-	err = db.Ping()
-	if err != nil {
-		return nil, err
-	}
-	return db, nil
-}
 
 func SelectConditions(db *sql.DB) ([]models.Condition, error) {
 	var conditions []models.Condition
@@ -67,11 +49,7 @@ func SelectConditionsSpecific(db *sql.DB, id string) ([]models.Condition, error)
 }
 
 func InsertConditionsSpecific(db *sql.DB, condition *models.Condition) error {
-	result, err := db.Exec("INSERT INTO  t_conditions (id, name, creator, created_at) VALUES ($1, $2, $3, now())", condition.ID, condition.Name, condition.Creator)
-	if err != nil {
-		return fmt.Errorf("InsertConditionsSpecific: %v", err)
-	}
-	_, err = result.LastInsertId()
+	_, err := db.Exec("INSERT INTO  t_conditions (id, name, creator, created_at) VALUES ($1, $2, $3, now())", condition.ID, condition.Name, condition.Creator)
 	if err != nil {
 		return fmt.Errorf("InsertConditionsSpecific: %v", err)
 	}

@@ -27,4 +27,8 @@ func (r *RestService) registerV1Endpoints() {
 	r.router.GET("/v1/conditions/:id", r.GetConditionSpecific)
 	r.router.PATCH("/v1/conditions/:id", r.UpdateCondition)
 	r.router.DELETE("/v1/conditions/:id", r.DeleteConditionSpecific)
+
+	r.router.GET("/v1/condition-status", r.GetConditionStatus)
+	r.router.GET("/v1/condition-status/:id", r.GetConditionStatusSpecific)
+	r.router.PATCH("/v1/condition-status/:id", r.UpdateConditionStatus)
 }

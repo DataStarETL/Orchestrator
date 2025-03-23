@@ -1,7 +1,6 @@
 package rest
 
 import (
-	"errors"
 	"fmt"
 	"github.com/DataStarETL/Orchestrator/internal/database"
 	"github.com/DataStarETL/Orchestrator/internal/models"
@@ -40,15 +39,7 @@ func (r *RestService) PostCondition(c *gin.Context) {
 }
 
 func (r *RestService) getConditionByID(id string) (*models.Condition, error) {
-	res, err := database.SelectConditionsSpecific(r.DB, id)
-	if err != nil {
-		panic(err)
-	}
-	if len(res) == 0 {
-		return nil, errors.New("condition not found")
-	}
-	return &res[0], nil
-
+	return database.SelectConditionsSpecific(r.DB, id)
 }
 
 func (r *RestService) GetConditionSpecific(c *gin.Context) {

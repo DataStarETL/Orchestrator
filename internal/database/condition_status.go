@@ -27,25 +27,15 @@ func SelectConditionStatus(db *sql.DB) ([]models.ConditionStatus, error) {
 	return conditionStatus, nil
 }
 
-func SelectConditionStatusSpecific(db *sql.DB, id string) ([]models.ConditionStatus, error) {
-	var conditionStatus []models.ConditionStatus
-
-	rows, err := db.Query("SELECT * FROM t_condition_status WHERE id = $1", id)
-	if err != nil {
-		return nil, fmt.Errorf("SelectConditionStatusSpecific: %v", err)
+func SelectConditionStatusSpecific(db *sql.DB, id string) (*models.ConditionStatus, error) {
+	var conditionStatus models.ConditionStatus
+	row := db.QueryRow("SELECT * FROM t_condition_status WHERE id = $1", id)
+	switch err := row.Scan(&conditionStatus.ID, &conditionStatus.Status, conditionStatus.LastChangedBy, conditionStatus.LastChangedAt); err {
+	case nil:
+		return &conditionStatus, nil
+	default:
+		return nil, err
 	}
-	defer rows.Close()
-	for rows.Next() {
-		var conditionStatusObj models.ConditionStatus
-		if err := rows.Scan(&conditionStatusObj.ID, &conditionStatusObj.Status, &conditionStatusObj.LastChangedBy, &conditionStatusObj.LastChangedAt); err != nil {
-			return nil, fmt.Errorf("SelectConditionStatusSpecific %v", err)
-		}
-		conditionStatus = append(conditionStatus, conditionStatusObj)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("SelectConditionStatusSpecific: %v", err)
-	}
-	return conditionStatus, nil
 }
 
 func InsertConditionStatusSpecific(db *sql.DB, conditionStatus *models.ConditionStatus) error {

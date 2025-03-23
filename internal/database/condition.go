@@ -27,25 +27,15 @@ func SelectConditions(db *sql.DB) ([]models.Condition, error) {
 	return conditions, nil
 }
 
-func SelectConditionsSpecific(db *sql.DB, id string) ([]models.Condition, error) {
-	var conditions []models.Condition
-
-	rows, err := db.Query("SELECT * FROM t_conditions WHERE id = $1", id)
-	if err != nil {
-		return nil, fmt.Errorf("SelectConditionsSpecific: %v", err)
+func SelectConditionsSpecific(db *sql.DB, id string) (*models.Condition, error) {
+	var condition models.Condition
+	row := db.QueryRow("SELECT * FROM t_conditions WHERE id = $1", id)
+	switch err := row.Scan(&condition.ID, &condition.Name, &condition.Creator, &condition.CreatedAt); err {
+	case nil:
+		return &condition, nil
+	default:
+		return nil, err
 	}
-	defer rows.Close()
-	for rows.Next() {
-		var con models.Condition
-		if err := rows.Scan(&con.ID, &con.Name, &con.Creator, &con.CreatedAt); err != nil {
-			return nil, fmt.Errorf("SelectConditionsSpecific %v", err)
-		}
-		conditions = append(conditions, con)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("SelectConditionsSpecific: %v", err)
-	}
-	return conditions, nil
 }
 
 func InsertConditionsSpecific(db *sql.DB, condition *models.Condition) error {

@@ -1,0 +1,5 @@
+# IDE settings & cache folder
+.idea
+
+# credentials
+.env

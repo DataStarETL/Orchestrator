@@ -8,14 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Implementation for `v1` condition-status endpoints
 ### Changed
-- Structure of existing DB functions for conditions
-- Structure of existing rest service functions for conditions
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+
+## [0.2.0] - 2025-03-30
+
+### Added
+- Implementation for `v1` condition-status endpoints
+- Generic response creation
+### Changed
+- reworked condition implementation (db + rest functions)
+
 
 ## [0.1.0] - 2025-03-23
 
